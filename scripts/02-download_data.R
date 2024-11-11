@@ -1,26 +1,21 @@
 #### Preamble ####
-# Purpose: Downloads and saves the data from [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 11 February 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: Downloads and saves the data from https://jacobfilipp.com/hammer/.
+# Author: Lexun Yu
+# Date: 19 October 2024
+# Contact: lx.yu@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
+# Pre-requisites: None
 
 
 #### Workspace setup ####
-library(opendatatoronto)
 library(tidyverse)
-# [...UPDATE THIS...]
 
 #### Download data ####
-# [...ADD CODE HERE TO DOWNLOAD...]
+# Specify the download URL from FiveThirtyEight
+url <- "https://jacobfilipp.com/hammerdata/hammer-3-compressed.zip"
 
+# Save the data zip
+download.file(url, "data/01-raw_data/hammer.zip")
 
-
-#### Save data ####
-# [...UPDATE THIS...]
-# change the_raw_data to whatever name you assigned when you downloaded it.
-write_csv(the_raw_data, "inputs/data/raw_data.csv") 
-
-         
+# Unzip
+unzip("data/01-raw_data/hammer.zip", exdir = "data/01-raw_data/")
