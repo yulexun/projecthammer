@@ -19,9 +19,10 @@ bibliography: references.bib
 #| message: false
 
 library(tidyverse)
-library(palmerpenguins)
+library(arrow)
+library(knitr)
+library(modelsummary)
 ```
-
 
 # Introduction
 
@@ -35,18 +36,17 @@ Why it matters paragraph
 
 Telegraphing paragraph: The remainder of this paper is structured as follows. @sec-data....
 
-
-
-
-
-
 # Data {#sec-data}
+
+```{r}
+eggs_data <- read_parquet("./data/02-analysis_data/cleaned_data.parquet")
+head(eggs_data)
+
+```
 
 ## Overview
 
 We use the statistical programming language R [@citeR].... Our data [@shelter].... Following @tellingstories, we consider...
-
-Overview text
 
 ## Measurement
 	
@@ -54,141 +54,76 @@ Some paragraphs about how we go from a phenomena in the world to an entry in the
 
 ## Outcome variables
 
-Add graphs, tables and text. Use sub-sub-headings for each outcome variable or update the subheading to be singular.
-
-
-
-Some of our data is of penguins (@fig-bills), from @palmerpenguins.
-
-```{r}
-#| label: fig-bills
-#| fig-cap: Bills of penguins
-#| echo: false
-
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = "none") +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
-```
-
-Talk more about it.
-
-And also planes (@fig-planes). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
-
-```{r}
-#| label: fig-planes
-#| fig-cap: Relationship between wing length and width
-#| echo: false
-#| warning: false
-#| message: false
-
-analysis_data <- read_csv(here::here("data/02-analysis_data/analysis_data.csv"))
-
-analysis_data |> 
-  ggplot(aes(x = width, y = length)) +
-  geom_point(alpha = 0.8) +
-  theme_minimal() +
-  labs(x = "Wing width (mm)",
-       y = "Wing length (mm)")
-```
-
-Talk way more about it. 
-
 ## Predictor variables
-
-Add graphs, tables and text.
-
-Use sub-sub-headings for each outcome variable and feel free to combine a few into one if they go together naturally.
-
-
-
-
-
-
-
-
-# Model
-
-The goal of our modelling strategy is twofold. Firstly,...
-
-Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
-
-## Model set-up
-
-Define $y_i$ as the number of seconds that the plane remained aloft. Then $\beta_i$ is the wing width and $\gamma_i$ is the wing length, both measured in millimeters.  
-
-\begin{align} 
-y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
-\mu_i &= \alpha + \beta_i + \gamma_i\\
-\alpha &\sim \mbox{Normal}(0, 2.5) \\
-\beta &\sim \mbox{Normal}(0, 2.5) \\
-\gamma &\sim \mbox{Normal}(0, 2.5) \\
-\sigma &\sim \mbox{Exponential}(1)
-\end{align}
-
-We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
-
-
-### Model justification
-
-We expect a positive relationship between the size of the wings and time spent aloft. In particular...
-
-We can use maths by including latex between dollar signs, for instance $\theta$.
 
 
 # Results
 
-Our results are summarized in @tbl-modelresults.
-
 ```{r}
-#| echo: false
-#| eval: true
+#|label: fig-ttlprice-ppu  
+#| include: false
 #| warning: false
 #| message: false
+#| fig-cap: Higher Quantity Egg Products Are More Expensive
+# removing outliers
 
-library(rstanarm)
+eggs_data <- eggs_data |>
+  filter(price_per_unit_numeric < quantile(eggs_data$price_per_unit_numeric, 0.75) + IQR(eggs_data$price_per_unit_numeric)) |>
+  filter(price_per_unit_numeric > quantile(eggs_data$price_per_unit_numeric, 0.25) - IQR(eggs_data$price_per_unit_numeric))
 
-first_model <-
-  readRDS(file = here::here("models/first_model.rds"))
+head(eggs_data)
+
+eggs_data |> 
+  ggplot(aes(price_per_unit_numeric, current_price, color = numerical_units)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_minimal() +
+  labs(x = "Current Price", y = "Price Per Unit") +
+  scale_color_continuous(name = "Egg Quantity")
 ```
+
+From @fig-ttlprice-ppu, there appears to be a weak linear relationship between current egg product price and the price per a single egg unit. However, after including egg quanitity, the relationship between current egg product price and egg quantity as a predictor of cost of an egg per a single unit is quite strong.
 
 ```{r}
-#| echo: false
-#| eval: true
-#| label: tbl-modelresults
-#| tbl-cap: "Explanatory models of flight time based on wing width and wing length"
+#|label: fig-brand-cost
+#| include: false
 #| warning: false
+#| message: false
+#| fig-cap: Some Egg Brands are More Expensive than Others
+# removing outliers
 
-modelsummary::modelsummary(
-  list(
-    "First model" = first_model
-  ),
-  statistic = "mad",
-  fmt = 2
-)
+brand_avg_quan <- eggs_data |> group_by(brand) |> summarise(avg_brand_quantity = mean(numerical_units))
+
+eggs_data <- eggs_data |> 
+  inner_join(brand_avg_quan, by = "brand")
+eggs_data |> 
+  ggplot(aes(brand, current_price, color = avg_brand_quantity.x)) +
+  geom_boxplot(outlier.shape = NA) +
+  theme_minimal() +
+  labs(y = "Current Price", x = "Egg Brand") + 
+  scale_color_continuous(name = "Average Egg Quantity") +
+  coord_flip()
 ```
 
-
-
+@fig-brand-cost shows that some brands have more expensive egg quantities than others. For example, Rabbit River Farms is more expensive than President's choice. Also, it is obvious that most of the brands offer a variety of products since the IQR of their prices are quite large.
 
 # Discussion
 
-## First discussion point {#sec-first-point}
+## Correlation vs. Causation {#sec-correcause}
 
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
+From @fig-brand-cost, some companies eggs are more important than other, for instance Gray Ridge is more expensive than Burnbrae Farms. However, this is not true since Golden Valley sells more eggs per one batch than Burnbrae Farms. While this is not a traditional cause of correlation vs. causation this is a similar siutation. Since only considering the relationship between the egg brand and the price per batch, we might think some brands are more expensive than others, but when considering the egg qunatity and price per single egg (@fig-ttlprice-ppu), we realize a different relationship olds true.
 
-## Second discussion point
+## Missing Data {#sec-missingdata}
 
-Please don't use these as sub-heading labels - change them to be what your point actually is.
+In this analysis, the old egg price variable was removed. This is because almost all of the data entries did not include this column. This limited our analysis since it made it quite difficult to analyze how specfic egg product prices changed over time.
 
-## Third discussion point
+## Sources of Bias {#sec-bias}
 
-## Weaknesses and next steps
+In @fig-ttlprice-ppu, by only looking at the linear model lines, there does not appear to be a strong relationship between current egg price and the price per unit. However, by looking at the graph in general, there appear to be four different positive, strong, linear relationships between current egg price and price per egg. This suggests that there is another variable affecting the reltionship, which based on the graph is the quantity of eggs in that batch. Thus, most conclusions regarding current egg price must be interpreted in a manner that accounts for the number of eggs in that batch.
 
-Weaknesses and next steps should also be included.
+## Weaknesses And Next Steps
+
+The biggest issue in this paper is the limitation of the data. The team had limited numerical data and it was only regarding egg price and egg quantity. In the future, we would gather purchase data to see how changes in egg prices could change consumer spending habits. We would also like to incorporate other historical data like interest changes, tax changes, and how those affect consumer egg spending habits and egg prices.
 
 \newpage
 
@@ -196,39 +131,7 @@ Weaknesses and next steps should also be included.
 
 # Appendix {-}
 
-
 # Additional data details
-
-# Model details {#sec-model-details}
-
-## Posterior predictive check
-
-In @fig-ppcheckandposteriorvsprior-1 we implement a posterior predictive check. This shows...
-
-In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. This shows... 
-
-```{r}
-#| eval: true
-#| echo: false
-#| message: false
-#| warning: false
-#| label: fig-ppcheckandposteriorvsprior
-#| layout-ncol: 2
-#| fig-cap: "Examining how the model fits, and is affected by, the data"
-#| fig-subcap: ["Posterior prediction check", "Comparing the posterior with the prior"]
-
-pp_check(first_model) +
-  theme_classic() +
-  theme(legend.position = "bottom")
-
-posterior_vs_prior(first_model) +
-  theme_minimal() +
-  scale_color_brewer(palette = "Set1") +
-  theme(legend.position = "bottom") +
-  coord_flip()
-```
-
-## Diagnostics
 
 @fig-stanareyouokay-1 is a trace plot. It shows... This suggests...
 
