@@ -4,3 +4,5 @@
 .Ruserdata
 .zip
 .sqlite
+data/01-raw_data/hammer-2-processed.sqlite
+data/01-raw_data/hammer.zip
