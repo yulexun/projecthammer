@@ -1,71 +1,37 @@
 #### Preamble ####
-# Purpose: Tests... [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 26 September 2024 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: test the dataset of egg price data
+# Author: Lexun Yu
+# Date: 14 November 2024
+# Contact: lx.yu@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
-
 
 #### Workspace setup ####
 library(tidyverse)
+library(arrow)
 library(testthat)
 
-data <- read_csv("data/02-analysis_data/analysis_data.csv")
+dataset <- read_parquet("data/02-analysis_data/cleaned_data.parquet")
 
+test_that("Dataset structure and values", {
+  # Check if dataset has the expected columns
+  expect_true(all(c(
+    "nowtime", "vendor", "product_id", "product_name", "brand",
+    "current_price", "units", "price_per_unit_numeric"
+  ) %in% colnames(dataset)))
 
-#### Test data ####
-# Test that the dataset has 151 rows - there are 151 divisions in Australia
-test_that("dataset has 151 rows", {
-  expect_equal(nrow(analysis_data), 151)
-})
+  # Check that there are no missing values in essential columns
+  expect_false(any(is.na(dataset$nowtime)))
+  expect_false(any(is.na(dataset$vendor)))
+  expect_false(any(is.na(dataset$product_id)))
+  expect_false(any(is.na(dataset$product_name)))
+  expect_false(any(is.na(dataset$brand)))
+  expect_false(any(is.na(dataset$current_price)))
+  expect_false(any(is.na(dataset$units)))
+  expect_false(any(is.na(dataset$price_per_unit_numeric)))
 
-# Test that the dataset has 3 columns
-test_that("dataset has 3 columns", {
-  expect_equal(ncol(analysis_data), 3)
-})
+  # Check that price_per_unit_numeric is numeric
+  expect_type(dataset$price_per_unit_numeric, "double")
 
-# Test that the 'division' column is character type
-test_that("'division' is character", {
-  expect_type(analysis_data$division, "character")
-})
-
-# Test that the 'party' column is character type
-test_that("'party' is character", {
-  expect_type(analysis_data$party, "character")
-})
-
-# Test that the 'state' column is character type
-test_that("'state' is character", {
-  expect_type(analysis_data$state, "character")
-})
-
-# Test that there are no missing values in the dataset
-test_that("no missing values in dataset", {
-  expect_true(all(!is.na(analysis_data)))
-})
-
-# Test that 'division' contains unique values (no duplicates)
-test_that("'division' column contains unique values", {
-  expect_equal(length(unique(analysis_data$division)), 151)
-})
-
-# Test that 'state' contains only valid Australian state or territory names
-valid_states <- c(
-  "New South Wales", "Victoria", "Queensland", "South Australia", "Western Australia",
-  "Tasmania", "Northern Territory", "Australian Capital Territory"
-)
-test_that("'state' contains valid Australian state names", {
-  expect_true(all(analysis_data$state %in% valid_states))
-})
-
-# Test that there are no empty strings in 'division', 'party', or 'state' columns
-test_that("no empty strings in 'division', 'party', or 'state' columns", {
-  expect_false(any(analysis_data$division == "" | analysis_data$party == "" | analysis_data$state == ""))
-})
-
-# Test that the 'party' column contains at least 2 unique values
-test_that("'party' column contains at least 2 unique values", {
-  expect_true(length(unique(analysis_data$party)) >= 2)
+  # Check if price_per_unit_numeric is greater than 0
+  expect_true(all(dataset$price_per_unit_numeric >= 0))
 })

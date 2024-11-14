@@ -1,13 +1,14 @@
 ---
-title: "My title"
-subtitle: "My subtitle if needed"
+title: "Vendor-Based Pricing Dynamics of Eggs in Canada"
+subtitle: "A Comparative Analysis of White and Brown Egg Market Prices"
 author: 
-  - First author
-  - Another author
-thanks: "Code and data are available at: [https://github.com/RohanAlexander/starter_folder](https://github.com/RohanAlexander/starter_folder)."
+  - Colin Sihan Yang
+  - Lexun Yu
+  - Siddharth Gowda
+thanks: "Code and data are available at: [https://github.com/yulexun/projecthammer](https://github.com/yulexun/projecthammer)."
 date: today
 date-format: long
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "This study provides an empirical analysis of the price dynamics of white and brown eggs across various vendors in Canada, derived from a robust dataset obtained through Project Hammer. By meticulously cleaning and processing the data with advanced statistical techniques in R, we uncover significant insights into the pricing variations between different egg types and vendors. The research identifies and compares the current and historical prices, facilitating an understanding of market trends at the vendor level without external economic or regulatory influence. This approach allows for a granular analysis of factors directly influencing egg prices at the retail level, providing a valuable resource for industry stakeholders aiming to strategize based on competitive pricing and consumer preferences. Our findings serve as a preliminary step towards a comprehensive exploration of micro-level market behaviors within the Canadian egg industry.‍"
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -23,35 +24,42 @@ library(palmerpenguins)
 library(arrow)
 library(gridExtra)
 library(ggplot2)
+library(here)
+library(modelsummary)
+
+eggs_data <- read_parquet(here("data/02-analysis_data/cleaned_data.parquet"))
 
 ```
 
 
 # Introduction
 
-Overview paragraph
+Egg prices have fluctuated in recent years due to various economic and environmental factors [@bundale_why_2023]. In Canada, egg pricing and marketing are regulated by the government. According to @ministry_of_agriculture_food_and_agribusiness_and_ministry_of_rural_affairs_supply_2023, the Canadian Hatching Egg Producers (CHEP) determines annual national production levels for hatching eggs with input from an advisory committee composed of industry and government representatives. These numbers are then allocated to provinces and adjusted throughout the year to meet demand. However, as @filipp_project_2024 noted, research on Canadian grocery food prices remains limited. 
 
-Estimand paragraph
-
-Results paragraph
-
-Why it matters paragraph
-
-Telegraphing paragraph: The remainder of this paper is structured as follows. @sec-data....
+This paper examines the factors influencing egg prices in Canada. This approach aims to identify areas that could explain recent price trends, providing a foundation for future studies on the Canadian egg market.
 
 
+Our analysis shows that while the relationship between egg product price and per-unit cost is weak, it strengthens significantly when egg quantity is factored in. Some brands, like Rabbit River Farms, are consistently more expensive than others, such as President's Choice. Wide price ranges for most brands suggest they offer diverse product lines, addressing various consumer needs.
 
+The remainder of this paper is structured as follows: @sec-data provides an overview of the data. We then present our results in @sec-result and discuss the implications, limitations, and future research directions in @sec-discussion.
 
-
+The data gathering and analysis is done in R [@citeR] with the following packages: knitr [@knitr], tidyverse [@tidyverse], ggplot2 [@ggplot2], dplyr [@dplyr], arrow [@arrow], here [@here], modelsummary [@modelsummary] and lubridate [@lubridate].
 
 # Data {#sec-data}
 
-## Overview
+## Measurement
+The raw data is obtained in SQLite form from @filipp_project_2024's website named Project Hammer. The raw dataset contains two tables. The first table contains various product, product names, and the vendor of the products. The second table contains old and current price, as well as price per unit.
 
-We use the statistical programming language R [@citeR].... Our data [@shelter].... Following @tellingstories, we consider...
+## Cleaning
 
-Overview text
+We clean the data with the clean_data.sql script and the exploratory_data_analysis R script. We retrieve data related to "White Eggs" and "Brown Eggs" from two tables, `raw` and `product`, with the following steps:
 
+- Selects various columns including `nowtime`, `vendor`, `product_id`, `product_name`, `brand`, `current_price`, `old_price`, `units`, and `other`.
+- Converts `price_per_unit` to a numeric format, stripping out symbols (like `$` and `/item`) and renaming it as `price_per_unit_numeric`.
+- Joins `raw` and `product` tables on `product_id`.
+- Filters for products containing "White Eggs" or "Brown Eggs" in their names and ensures `price_per_unit` is not `NULL`.
+
+## Summary
 ```{r}
 #| warning: false
 #| echo: false
@@ -59,12 +67,14 @@ cleaned_data = read_parquet(here::here("data/02-analysis_data/cleaned_data.parqu
 ```
 
 ```{r}
-#| label: bar-charts
+#| label: fig-bar-charts
 #| fig-cap: categorical variable bar chart
-#| fig-subcap: ["bar chart for vendor, bar chart for brand"]
+#| fig-subcap: ["bar chart for vendor", "bar chart for brand"]
 #| warning: false
 #| echo: false
-#| layout-ncol: 2
+#| ncol: 2
+#| fig-width: 40
+#| fig-height: 20
 vendor_counts <- cleaned_data %>%
   count(vendor)  # Replace 'vendor' with the actual column name for vendors in your dataset
 
@@ -84,202 +94,85 @@ ggplot(brand_counts, aes(x = brand, y = n, fill = brand)) +  # 'n' is the count 
        x = "brand",
        y = "Count") +
   theme_minimal() +  # Optional: adds a minimalistic theme
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Optional: rotates x labels for better readability
-
-
-
-
-
+   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 12),  # Increases x-axis label font size
+        axis.title.x = element_text(size = 32),  # Increases x-axis title font size
+        axis.title.y = element_text(size = 32),  # Increases y-axis title font size
+        plot.title = element_text(size = 32, face = "bold"))  # Increases and bolds the plot title font size
 
 ```
 
-@bar-charts
-## Measurement
-	
-Some paragraphs about how we go from a phenomena in the world to an entry in the dataset.
+@fig-bar-charts-1 displays the distribution of vendor counts clearly, revealing a significant variation in the frequency of different vendors. From the visualization, it's evident that Voila dominates with the highest count, significantly outpacing other vendors like SaveOnFoods, NoFrills, Metro, and Loblaws, which have a more moderate presence. This dominance of Voila suggests a strong market presence or a higher transaction volume compared to the others. The much lower count for SaveOnFoods indicates it has a smaller market share or fewer transactions. Such trends highlight the market dynamics and competitive landscape among these vendors, which could be critical for strategic business analyses and decision-making in related sectors.
 
-## Outcome variables
-
-Add graphs, tables and text. Use sub-sub-headings for each outcome variable or update the subheading to be singular.
-
-
-
-Some of our data is of penguins (@fig-bills), from @palmerpenguins.
-
-```{r}
-#| label: fig-bills
-#| fig-cap: Bills of penguins
-#| echo: false
-
-# ggplot(penguins, aes(x = island, fill = species)) +
-#   geom_bar(alpha = 0.8) +
-#   scale_fill_manual(values = c("darkorange","purple","cyan4"),
-#                     guide = "none") +
-#   theme_minimal() +
-#   facet_wrap(~species, ncol = 1) +
-#   coord_flip()
-```
-
-Talk more about it.
-
-And also planes (@fig-planes). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
-
-
-
-Talk way more about it. 
-
-## Predictor variables
-
-Add graphs, tables and text.
-
-Use sub-sub-headings for each outcome variable and feel free to combine a few into one if they go together naturally.
-
-
-
-
-
-
-
-
-# Model
-
-The goal of our modelling strategy is twofold. Firstly,...
-
-Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
-
-## Model set-up
-
-Define $y_i$ as the number of seconds that the plane remained aloft. Then $\beta_i$ is the wing width and $\gamma_i$ is the wing length, both measured in millimeters.  
-
-\begin{align} 
-y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
-\mu_i &= \alpha + \beta_i + \gamma_i\\
-\alpha &\sim \mbox{Normal}(0, 2.5) \\
-\beta &\sim \mbox{Normal}(0, 2.5) \\
-\gamma &\sim \mbox{Normal}(0, 2.5) \\
-\sigma &\sim \mbox{Exponential}(1)
-\end{align}
-
-We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
-
-
-### Model justification
-
-We expect a positive relationship between the size of the wings and time spent aloft. In particular...
-
-We can use maths by including latex between dollar signs, for instance $\theta$.
-
+@fig-bar-charts-2 The brands “Darvonda” and “Excelsior Farms” have a far greater count compared to the rest signifying them as the dominant brands in this dataset. The rest of the brands exhibit frequencies spread out over a wide spectrum but are on the whole very sparse, with a number of brands being barely in existence. This gives the impression that a few brands lead with a larger market share, perhaps because of consumer preference or successful distribution strategies, while several others have only niche market segments. The visual dispersion from left to right also indicates that the market is not only concentrated around the major players, but several small players have also a very little share in the market.
 
 # Results
 
-Our results are summarized in @tbl-modelresults.
-
 ```{r}
-#| echo: false
-#| eval: true
+#| label: fig-ttlprice-ppu  
+#| fig-cap: Higher Quantity Egg Products Are More Expensive
 #| warning: false
-#| message: false
+#| echo: false
 
-# library(rstanarm)
+# removing outliers
 
-# first_model <-
-#   readRDS(file = here::here("models/first_model.rds"))
+eggs_data <- eggs_data |>
+  filter(price_per_unit_numeric < quantile(eggs_data$price_per_unit_numeric, 0.75) + IQR(eggs_data$price_per_unit_numeric)) |>
+  filter(price_per_unit_numeric > quantile(eggs_data$price_per_unit_numeric, 0.25) - IQR(eggs_data$price_per_unit_numeric))
+
+head(eggs_data)
+
+eggs_data |> 
+  ggplot(aes(price_per_unit_numeric, current_price, color = numerical_units)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_minimal() +
+  labs(x = "Current Price", y = "Price Per Unit") +
+  scale_color_continuous(name = "Egg Quantity")
 ```
 
-```{r}
-#| echo: false
-#| eval: true
-#| label: tbl-modelresults
-#| tbl-cap: "Explanatory models of flight time based on wing width and wing length"
-#| warning: false
-
-# modelsummary::modelsummary(
-#   list(
-#     "First model" = first_model
-#   ),
-#   statistic = "mad",
-#   fmt = 2
-# )
-```
-
-
-
-
-# Discussion
-
-## First discussion point {#sec-first-point}
-
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
-
-## Second discussion point
-
-Please don't use these as sub-heading labels - change them to be what your point actually is.
-
-## Third discussion point
-
-## Weaknesses and next steps
-
-Weaknesses and next steps should also be included.
-
-\newpage
-
-\appendix
-
-# Appendix {-}
-
-
-# Additional data details
-
-# Model details {#sec-model-details}
-
-## Posterior predictive check
-
-In @fig-ppcheckandposteriorvsprior-1 we implement a posterior predictive check. This shows...
-
-In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. This shows... 
+From @fig-ttlprice-ppu, there appears to be a weak linear relationship between current egg product price and the price per a single egg unit. However, after including egg quanitity, the relationship between current egg product price and egg quantity as a predictor of cost of an egg per a single unit is quite strong.
 
 ```{r}
-#| eval: true
-#| echo: false
-#| message: false
+#| label: fig-brand-cost
+#| fig-cap: Some Egg Brands are More Expensive than Others
 #| warning: false
-#| label: fig-ppcheckandposteriorvsprior
-#| layout-ncol: 2
-#| fig-cap: "Examining how the model fits, and is affected by, the data"
-#| fig-subcap: ["Posterior prediction check", "Comparing the posterior with the prior"]
+#| echo: false
 
-# pp_check(first_model) +
-#   theme_classic() +
-#   theme(legend.position = "bottom")
+brand_avg_quan <- eggs_data |> 
+  group_by(brand) |> 
+  summarise(avg_brand_quantity = mean(numerical_units))
 
-# posterior_vs_prior(first_model) +
-#   theme_minimal() +
-#   scale_color_brewer(palette = "Set1") +
-#   theme(legend.position = "bottom") +
-#   coord_flip()
+eggs_data <- eggs_data |> 
+  left_join(brand_avg_quan, by = "brand")
+
+eggs_data |> 
+  ggplot(aes(x = brand, y = current_price, color = avg_brand_quantity)) +
+  geom_boxplot(outlier.shape = NA) +
+  theme_minimal() +
+  labs(y = "Current Price", x = "Egg Brand") + 
+  scale_color_continuous(name = "Average Egg Quantity") +
+  coord_flip()
 ```
 
-## Diagnostics
+@fig-brand-cost shows that some brands have more expensive egg quantities than others. For example, Rabbit River Farms is more expensive than President's choice. Also, it is obvious that most of the brands offer a variety of products since the IQR of their prices are quite large.
 
-@fig-stanareyouokay-1 is a trace plot. It shows... This suggests...
+# Discussion {#sec-discussion}
 
-@fig-stanareyouokay-2 is a Rhat plot. It shows... This suggests...
+## Correlation vs. Causation {#sec-correcause}
 
-```{r}
-#| echo: false
-#| eval: true
-#| message: false
-#| warning: false
-#| label: fig-stanareyouokay
-#| fig-cap: "Checking the convergence of the MCMC algorithm"
-#| fig-subcap: ["Trace plot", "Rhat plot"]
-#| layout-ncol: 2
+From @fig-brand-cost, some companies eggs are more important than other, for instance Gray Ridge is more expensive than Burnbrae Farms. However, this is not true since Golden Valley sells more eggs per one batch than Burnbrae Farms. While this is not a traditional cause of correlation vs. causation this is a similar siutation. Since only considering the relationship between the egg brand and the price per batch, we might think some brands are more expensive than others, but when considering the egg qunatity and price per single egg (@fig-ttlprice-ppu), we realize a different relationship olds true.
 
-# plot(first_model, "trace")
+## Missing Data {#sec-missingdata}
 
-# plot(first_model, "rhat")
-```
+In this analysis, the old egg price variable was removed. This is because almost all of the data entries did not include this column. This limited our analysis since it made it quite difficult to analyze how specfic egg product prices changed over time.
 
+## Sources of Bias {#sec-bias}
+
+In @fig-ttlprice-ppu, by only looking at the linear model lines, there does not appear to be a strong relationship between current egg price and the price per unit. However, by looking at the graph in general, there appear to be four different positive, strong, linear relationships between current egg price and price per egg. This suggests that there is another variable affecting the reltionship, which based on the graph is the quantity of eggs in that batch. Thus, most conclusions regarding current egg price must be interpreted in a manner that accounts for the number of eggs in that batch.
+
+## Weaknesses And Next Steps
+
+The biggest issue in this paper is the limitation of the data. The team had limited numerical data and it was only regarding egg price and egg quantity. In the future, we would gather purchase data to see how changes in egg prices could change consumer spending habits. We would also like to incorporate other historical data like interest changes, tax changes, and how those affect consumer egg spending habits and egg prices.
 
 
 \newpage

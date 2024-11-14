@@ -1,7 +1,9 @@
 # Vendor-Based Pricing Dynamics of Eggs in Canada
+# Vendor-Based Pricing Dynamics of Eggs in Canada
 
 ## Overview
 
+This study provides an empirical analysis of the price dynamics of various eggs across various brand and vendors in Canada, derived from a robust dataset obtained through Project Hammer. By meticulously cleaning and processing the data with advanced statistical techniques in R, we uncover significant insights into the pricing variations between different egg types and vendors. 
 This study provides an empirical analysis of the price dynamics of various eggs across various brand and vendors in Canada, derived from a robust dataset obtained through Project Hammer. By meticulously cleaning and processing the data with advanced statistical techniques in R, we uncover significant insights into the pricing variations between different egg types and vendors. 
 
 
@@ -20,6 +22,7 @@ The repo is structured as:
 ## Statement on LLM usage
 
 we use the ChatGPT to generate the example SQL code for us to understand how to extract the eggs number in unit column and the entire chat history is available in other/llm_usage/usage.txt.
+we use the ChatGPT to generate the example SQL code for us to understand how to extract the eggs number in unit column and the entire chat history is available in other/llm_usage/usage.txt.
 
 ## Note
 
@@ -29,4 +32,3 @@ You can run
 renv::restore()
 ```
 to restore the R project emvironment. We also included a .Rproj file for RStudio users. For more information, see [this Github Issue](https://github.com/posit-dev/positron/discussions/3967) and [renv](https://rstudio.github.io/renv/articles/renv.html).
-
