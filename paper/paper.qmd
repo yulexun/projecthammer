@@ -59,12 +59,14 @@ cleaned_data = read_parquet(here::here("data/02-analysis_data/cleaned_data.parqu
 ```
 
 ```{r}
-#| label: bar-charts
+#| label: fig-bar-charts
 #| fig-cap: categorical variable bar chart
-#| fig-subcap: ["bar chart for vendor, bar chart for brand"]
+#| fig-subcap: ["bar chart for vendor", "bar chart for brand"]
 #| warning: false
 #| echo: false
-#| layout-ncol: 2
+#| ncol: 2
+#| fig-width: 40
+#| fig-height: 20
 vendor_counts <- cleaned_data %>%
   count(vendor)  # Replace 'vendor' with the actual column name for vendors in your dataset
 
@@ -84,7 +86,10 @@ ggplot(brand_counts, aes(x = brand, y = n, fill = brand)) +  # 'n' is the count 
        x = "brand",
        y = "Count") +
   theme_minimal() +  # Optional: adds a minimalistic theme
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Optional: rotates x labels for better readability
+   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 12),  # Increases x-axis label font size
+        axis.title.x = element_text(size = 32),  # Increases x-axis title font size
+        axis.title.y = element_text(size = 32),  # Increases y-axis title font size
+        plot.title = element_text(size = 32, face = "bold"))  # Increases and bolds the plot title font size
 
 
 
@@ -93,7 +98,11 @@ ggplot(brand_counts, aes(x = brand, y = n, fill = brand)) +  # 'n' is the count 
 
 ```
 
-@bar-charts
+\newpage
+
+@fig-bar-charts-1 The bar chart displays the distribution of vendor counts clearly, revealing a significant variation in the frequency of different vendors. From the visualization, it's evident that Voila dominates with the highest count, significantly outpacing other vendors like SaveOnFoods, NoFrills, Metro, and Loblaws, which have a more moderate presence. This dominance of Voila suggests a strong market presence or a higher transaction volume compared to the others. The much lower count for SaveOnFoods indicates it has a smaller market share or fewer transactions. Such trends highlight the market dynamics and competitive landscape among these vendors, which could be critical for strategic business analyses and decision-making in related sectors.
+
+@fig-bar-charts-2
 ## Measurement
 	
 Some paragraphs about how we go from a phenomena in the world to an entry in the dataset.
