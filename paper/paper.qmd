@@ -21,6 +21,9 @@ bibliography: references.bib
 
 library(tidyverse)
 library(palmerpenguins)
+library(arrow)
+library(gridExtra)
+library(ggplot2)
 ```
 
 
@@ -36,6 +39,18 @@ The remainder of this paper is structured as follows: @sec-data provides an over
 
 The data gathering and analysis is done in R [@citeR] with the following packages: knitr [@knitr], tidyverse [@tidyverse], ggplot2 [@ggplot2], dplyr [@dplyr], arrow [@arrow], here [@here] and lubridate [@lubridate].
 
+# Data {#sec-data}
+## Measurement
+The raw data is obtained in SQLite form from @filipp_project_2024's website named Project Hammer. The raw dataset contains two tables. The first table contains various product, product names, and the vendor of the products. The second table contains old and current price, as well as price per unit.
+
+## Cleaning
+
+We clean the data with the clean_data.sql script and the exploratory_data_analysis R script. We retrieve data related to "White Eggs" and "Brown Eggs" from two tables, `raw` and `product`, with the following steps:
+
+- Selects various columns including `nowtime`, `vendor`, `product_id`, `product_name`, `brand`, `current_price`, `old_price`, `units`, and `other`.
+- Converts `price_per_unit` to a numeric format, stripping out symbols (like `$` and `/item`) and renaming it as `price_per_unit_numeric`.
+- Joins `raw` and `product` tables on `product_id`.
+- Filters for products containing "White Eggs" or "Brown Eggs" in their names and ensures `price_per_unit` is not `NULL`.
 
 
 \newpage
