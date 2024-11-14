@@ -1,7 +1,9 @@
 # Vendor-Based Pricing Dynamics of Eggs in Canada
+# Vendor-Based Pricing Dynamics of Eggs in Canada
 
 ## Overview
 
+This study provides an empirical analysis of the price dynamics of various eggs across various brand and vendors in Canada, derived from a robust dataset obtained through Project Hammer. By meticulously cleaning and processing the data with advanced statistical techniques in R, we uncover significant insights into the pricing variations between different egg types and vendors. 
 This study provides an empirical analysis of the price dynamics of various eggs across various brand and vendors in Canada, derived from a robust dataset obtained through Project Hammer. By meticulously cleaning and processing the data with advanced statistical techniques in R, we uncover significant insights into the pricing variations between different egg types and vendors. 
 
 
