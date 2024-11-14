@@ -3,7 +3,7 @@ Date: 14 Nov 2024
 
 Prompt: I have data that can come in this structure "6un", "12 eggs", "30eggs" (and other structures) and I need to write a sqlite cast statment in a select that only gets the numbers, how to. Keep in mind that numbers are either from 0-99 (meaning only one or two digits)
 
-To extract the number from a string that can have various structures like "6un", "12 eggs", or "30eggs", and where the number is guaranteed to be between 0 and 99 (one or two digits), you can use SQLite string functions to isolate the numeric part from the rest of the string.
+Response: To extract the number from a string that can have various structures like "6un", "12 eggs", or "30eggs", and where the number is guaranteed to be between 0 and 99 (one or two digits), you can use SQLite string functions to isolate the numeric part from the rest of the string.
 
 Here’s a solution using CAST, SUBSTR, and INSTR to extract the leading numeric part of the string:
 
