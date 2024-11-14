@@ -1,8 +1,8 @@
-# Egg product analysis
+# Vendor-Based Pricing Dynamics of Eggs in Canada
 
 ## Overview
 
-This repo provides students with a foundation for their own projects associated with *Telling Stories with Data*. You do not need every aspect for every paper and you should delete aspects that you do not need.
+This study provides an empirical analysis of the price dynamics of various eggs across various brand and vendors in Canada, derived from a robust dataset obtained through Project Hammer. By meticulously cleaning and processing the data with advanced statistical techniques in R, we uncover significant insights into the pricing variations between different egg types and vendors. 
 
 
 ## File Structure
