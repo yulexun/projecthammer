@@ -1,5 +1,4 @@
 # Vendor-Based Pricing Dynamics of Eggs in Canada
-# Vendor-Based Pricing Dynamics of Eggs in Canada
 
 ## Overview
 
