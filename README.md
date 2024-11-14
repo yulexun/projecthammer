@@ -1,8 +1,8 @@
-# Project Hammer [update this]
+# Vendor-Based Pricing Dynamics of Eggs in Canada
 
 ## Overview
 
-This repo provides students with a foundation for their own projects associated with *Telling Stories with Data*. You do not need every aspect for every paper and you should delete aspects that you do not need.
+This study provides an empirical analysis of the price dynamics of various eggs across various brand and vendors in Canada, derived from a robust dataset obtained through Project Hammer. By meticulously cleaning and processing the data with advanced statistical techniques in R, we uncover significant insights into the pricing variations between different egg types and vendors. 
 
 
 ## File Structure
@@ -19,12 +19,13 @@ The repo is structured as:
 
 ## Statement on LLM usage
 
-Aspects of the code were written with the help of the auto-complete tool, Codriver. The abstract and introduction were written with the help of ChatHorse and the entire chat history is available in inputs/llms/usage.txt.
+we use the ChatGPT to generate the example SQL code for us to understand how to extract the eggs number in unit column and the entire chat history is available in other/llm_usage/usage.txt.
 
-## Some checks
+## Note
 
-- [ ] Change the rproj file name so that it's not starter_folder.Rproj
-- [ ] Change the README title so that it's not Starter folder
-- [ ] Remove files that you're not using
-- [ ] Update comments in R scripts
-- [ ] Remove this checklist
+This R project is setup with [Positron](https://positron.posit.co/), the new IDE by Posit PBC. The properties of this project is stored in `/renv/settings.json`. We use renv for reproducibility and portability. With the metadata from the lockfile, other researchers can install exactly the same version of every package.
+You can run 
+```sh
+renv::restore()
+```
+to restore the R project emvironment. We also included a .Rproj file for RStudio users. For more information, see [this Github Issue](https://github.com/posit-dev/positron/discussions/3967) and [renv](https://rstudio.github.io/renv/articles/renv.html).

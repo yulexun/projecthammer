@@ -207,6 +207,22 @@
       ],
       "Hash": "543776ae6848fde2f48ff3816d0628bc"
     },
+    "bayestestR": {
+      "Package": "bayestestR",
+      "Version": "0.15.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "datawizard",
+        "graphics",
+        "insight",
+        "methods",
+        "stats",
+        "utils"
+      ],
+      "Hash": "d7c05ccb9d60d87dbbe8b4042c385f01"
+    },
     "bit": {
       "Package": "bit",
       "Version": "4.5.0",
@@ -331,6 +347,18 @@
       ],
       "Hash": "f61dbaec772ccd2e17705c1e872e9e7c"
     },
+    "checkmate": {
+      "Package": "checkmate",
+      "Version": "2.3.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "backports",
+        "utils"
+      ],
+      "Hash": "0e14e01ce07e7c88fd25de6d4260d26b"
+    },
     "cli": {
       "Package": "cli",
       "Version": "3.6.3",
@@ -445,6 +473,19 @@
         "methods"
       ],
       "Hash": "2e00b378fc3be69c865120d9f313039a"
+    },
+    "datawizard": {
+      "Package": "datawizard",
+      "Version": "0.13.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "insight",
+        "stats",
+        "utils"
+      ],
+      "Hash": "303aeace6f3554ce2d62e5d1df6fcd6e"
     },
     "dbplyr": {
       "Package": "dbplyr",
@@ -803,6 +844,16 @@
       ],
       "Hash": "9171f898db9d9c4c1b2c745adc2c1ef1"
     },
+    "here": {
+      "Package": "here",
+      "Version": "1.0.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "rprojroot"
+      ],
+      "Hash": "24b224366f9c2e7534d2344d10d59211"
+    },
     "highr": {
       "Package": "highr",
       "Version": "0.11",
@@ -869,6 +920,19 @@
         "uuid"
       ],
       "Hash": "99df65cfef20e525ed38c3d2577f7190"
+    },
+    "insight": {
+      "Package": "insight",
+      "Version": "0.20.5",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "methods",
+        "stats",
+        "utils"
+      ],
+      "Hash": "856341c90b80b78090cf2d68862102bd"
     },
     "isoband": {
       "Package": "isoband",
@@ -1066,6 +1130,26 @@
       ],
       "Hash": "4f50122dc256b1b6996a4703fecea821"
     },
+    "modelsummary": {
+      "Package": "modelsummary",
+      "Version": "2.2.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "checkmate",
+        "data.table",
+        "generics",
+        "glue",
+        "insight",
+        "methods",
+        "parameters",
+        "performance",
+        "tables",
+        "tinytable"
+      ],
+      "Hash": "b4b1ed61d9bfdc897a5a163a5db4b779"
+    },
     "munsell": {
       "Package": "munsell",
       "Version": "0.5.1",
@@ -1110,6 +1194,38 @@
         "R"
       ],
       "Hash": "6c6861efbc13c1d543749e9c7be4a592"
+    },
+    "parameters": {
+      "Package": "parameters",
+      "Version": "0.23.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "bayestestR",
+        "datawizard",
+        "graphics",
+        "insight",
+        "methods",
+        "stats",
+        "utils"
+      ],
+      "Hash": "518970426f8042a2b27c3415da881674"
+    },
+    "performance": {
+      "Package": "performance",
+      "Version": "0.12.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "bayestestR",
+        "datawizard",
+        "insight",
+        "stats",
+        "utils"
+      ],
+      "Hash": "64e61921ea6b2a4d76c81290d5ecce25"
     },
     "pillar": {
       "Package": "pillar",
@@ -1569,6 +1685,20 @@
       ],
       "Hash": "213b6b8ed5afbf934843e6c3b090d418"
     },
+    "tables": {
+      "Package": "tables",
+      "Version": "0.9.31",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "htmltools",
+        "knitr",
+        "stats",
+        "utils"
+      ],
+      "Hash": "75c4d11d0b824c4c5d774cd659138bb6"
+    },
     "testthat": {
       "Package": "testthat",
       "Version": "3.2.1.1",
@@ -1719,6 +1849,17 @@
         "cpp11"
       ],
       "Hash": "c5f3c201b931cd6474d17d8700ccb1c8"
+    },
+    "tinytable": {
+      "Package": "tinytable",
+      "Version": "0.5.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "methods"
+      ],
+      "Hash": "883a36d41f1af06f538ba718bebd5f7d"
     },
     "tinytex": {
       "Package": "tinytex",
