@@ -20,6 +20,7 @@ The repo is structured as:
 ## Statement on LLM usage
 
 we use the ChatGPT to generate the example SQL code for us to understand how to extract the eggs number in unit column and the entire chat history is available in other/llm_usage/usage.txt.
+we use the ChatGPT to generate the example SQL code for us to understand how to extract the eggs number in unit column and the entire chat history is available in other/llm_usage/usage.txt.
 
 ## Note
 
