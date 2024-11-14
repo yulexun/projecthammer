@@ -1,52 +1,45 @@
 #### Preamble ####
-# Purpose: Simulates a dataset of Australian electoral divisions, including the
-# state and party that won each division.
-# Author: Rohan Alexander
-# Date: 26 September 2024
-# Contact: rohan.alexander@utoronto.ca
+# Purpose: Simulates a dataset of egg price data
+# Author: Lexun Yu
+# Date: 14 November 2024
+# Contact: lx.yu@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: The `tidyverse` package must be installed
-# Any other information needed? Make sure you are in the `starter_folder` rproj
 
 
-#### Workspace setup ####
-library(tidyverse)
-set.seed(853)
+# Load necessary library
+library(dplyr)
+library(arrow)
 
+# Set seed for reproducibility
+set.seed(123)
 
-#### Simulate data ####
-# State names
-states <- c(
-  "New South Wales",
-  "Victoria",
-  "Queensland",
-  "South Australia",
-  "Western Australia",
-  "Tasmania",
-  "Northern Territory",
-  "Australian Capital Territory"
+# Simulate data
+raw <- data.frame(
+  nowtime = as.POSIXct("2024-01-01") + sample(1:10000, 100, replace = TRUE),
+  vendor = sample(c("VendorA", "VendorB", "VendorC"), 100, replace = TRUE),
+  product_id = sample(1:50, 100, replace = TRUE),
+  current_price = round(runif(100, 2, 6), 2),
+  old_price = round(runif(100, 2, 6), 2),
+  units = sample(1:12, 100, replace = TRUE),
+  price_per_unit = paste0("$", round(runif(100, 0.1, 0.5), 2), "/item")
 )
 
-# Political parties
-parties <- c("Labor", "Liberal", "Greens", "National", "Other")
+product <- data.frame(
+  id = 1:50,
+  product_name = sample(c("White Eggs", "Brown Eggs", "Large Eggs", "Free Range Eggs"), 50, replace = TRUE),
+  brand = sample(c("BrandX", "BrandY", "BrandZ"), 50, replace = TRUE)
+)
 
-# Create a dataset by randomly assigning states and parties to divisions
-analysis_data <- tibble(
-  division = paste("Division", 1:151), # Add "Division" to make it a character
-  state = sample(
-    states,
-    size = 151,
-    replace = TRUE,
-    prob = c(0.25, 0.25, 0.15, 0.1, 0.1, 0.1, 0.025, 0.025) # Rough state population distribution
-  ),
-  party = sample(
-    parties,
-    size = 151,
-    replace = TRUE,
-    prob = c(0.40, 0.40, 0.05, 0.1, 0.05) # Rough party distribution
+# Join the tables to simulate the SQL JOIN operation
+dataset <- raw %>%
+  inner_join(product, by = c("product_id" = "id")) %>%
+  filter((grepl("White Eggs", product_name) | grepl("Brown Eggs", product_name)) &
+    !is.na(price_per_unit)) %>%
+  mutate(price_per_unit_numeric = as.numeric(gsub("[^0-9.]", "", price_per_unit))) %>%
+  select(
+    nowtime, vendor, product_id, product_name, brand, current_price, old_price, units,
+    price_per_unit_numeric
   )
-)
 
-
-#### Save data ####
-write_csv(analysis_data, "data/00-simulated_data/simulated_data.csv")
+# View the resulting dataset
+write_parquet(dataset, "data/00-simulated_data/simulated_data.parquet")
