@@ -21,10 +21,12 @@ The repo is structured as:
 
 we use the ChatGPT to generate the example SQL code for us to understand how to extract the eggs number in unit column and the entire chat history is available in other/llm_usage/usage.txt.
 
-## Some checks
+## Note
 
-- [ ] Change the rproj file name so that it's not starter_folder.Rproj
-- [ ] Change the README title so that it's not Starter folder
-- [ ] Remove files that you're not using
-- [ ] Update comments in R scripts
-- [ ] Remove this checklist
+This R project is setup with [Positron](https://positron.posit.co/), the new IDE by Posit PBC. The properties of this project is stored in `/renv/settings.json`. We use renv for reproducibility and portability. With the metadata from the lockfile, other researchers can install exactly the same version of every package.
+You can run 
+```sh
+renv::restore()
+```
+to restore the R project emvironment. We also included a .Rproj file for RStudio users. For more information, see [this Github Issue](https://github.com/posit-dev/positron/discussions/3967) and [renv](https://rstudio.github.io/renv/articles/renv.html).
+
