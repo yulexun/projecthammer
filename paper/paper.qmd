@@ -105,7 +105,7 @@ ggplot(brand_counts, aes(x = brand, y = n, fill = brand)) +  # 'n' is the count 
 
 @fig-bar-charts-2 The brands “Darvonda” and “Excelsior Farms” have a far greater count compared to the rest signifying them as the dominant brands in this dataset. The rest of the brands exhibit frequencies spread out over a wide spectrum but are on the whole very sparse, with a number of brands being barely in existence. This gives the impression that a few brands lead with a larger market share, perhaps because of consumer preference or successful distribution strategies, while several others have only niche market segments. The visual dispersion from left to right also indicates that the market is not only concentrated around the major players, but several small players have also a very little share in the market.
 
-# Results
+# Results {#sec-result}
 
 ```{r}
 #| label: fig-ttlprice-ppu  
